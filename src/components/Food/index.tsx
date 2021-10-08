@@ -2,14 +2,20 @@ import { useState } from "react";
 import { FiEdit3, FiTrash } from "react-icons/fi";
 
 import { Container } from "./styles";
-import api from '../../services/api';
+import api from "../../services/api";
+import { FoodType } from "../types";
 
-export function Food({food, handleEditFood, handleDelete}) {
-  const [isAvailable, setIsAvailable] = useState(true);
+interface FoodProps {
+  key: number;
+  food: FoodType;
+  handleEditFood: (food: FoodType) => void;
+  handleDelete: (id: number) => void;
+}
+
+export function Food({ food, handleEditFood, handleDelete }: FoodProps) {
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
 
   const setEditingFood = () => {
-    console.log(food, handleEditFood);
-
     handleEditFood(food);
   };
 
@@ -58,10 +64,7 @@ export function Food({food, handleEditFood, handleDelete}) {
         <div className="availability-container">
           <p>{isAvailable ? "Disponível" : "Indisponível"}</p>
 
-          <label
-            htmlFor={`available-switch-${food.id}`}
-            className="switch"
-          >
+          <label htmlFor={`available-switch-${food.id}`} className="switch">
             <input
               id={`available-switch-${food.id}`}
               type="checkbox"

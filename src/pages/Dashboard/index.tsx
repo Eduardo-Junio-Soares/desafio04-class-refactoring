@@ -6,18 +6,19 @@ import { Food } from "../../components/Food";
 import ModalAddFood from "../../components/ModalAddFood";
 import ModalEditFood from "../../components/ModalEditFood";
 import { FoodsContainer } from "./styles";
+import { FoodType } from "../../components/types";
 
 export function Dashboard() {
-  const [foods, setfoods] = useState([]);
+  const [foods, setfoods] = useState<FoodType[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [editingFood, setEditingFood] = useState({});
+  const [editingFood, setEditingFood] = useState<FoodType>();
   const [editOpenModal, setEditOpenModal] = useState(false);
 
   useEffect(() => {
     api.get(`/foods`).then((res) => setfoods(res.data));
   }, []);
 
-  const handleAddFood = async (food) => {
+  const handleAddFood = async (food: FoodType) => {
     try {
       const response = await api.post("/foods", {
         ...food,
@@ -30,15 +31,15 @@ export function Dashboard() {
     }
   };
 
-  const handleUpdateFood = async (food) => {
+  const handleUpdateFood = async (food: FoodType) => {
     try {
-      const foodUpdated = await api.put(`/foods/${editingFood.id}`, {
+      const foodUpdated = await api.put(`/foods/${editingFood?.id}`, {
         ...editingFood,
         ...food,
       });
 
-      const foodsUpdated = foods.map((f) =>
-        f.id !== foodUpdated.data.id ? f : foodUpdated.data
+      const foodsUpdated = foods?.map((food) =>
+        food.id !== foodUpdated.data.id ? food : foodUpdated.data
       );
 
       setfoods(foodsUpdated);
@@ -47,14 +48,14 @@ export function Dashboard() {
     }
   };
   
-  const handleDeleteFood = async (id) => {
+  const handleDeleteFood = async (id: number) => {
     await api.delete(`/foods/${id}`);
-    const foodsFiltered = foods.filter((food) => food.id !== id);
+    const foodsFiltered = foods?.filter((food) => food.id !== id);
 
     setfoods(foodsFiltered);
   };
 
-  const handleEditFood = (food) => {
+  const handleEditFood = (food: FoodType) => {
     setEditingFood(food);
     setEditOpenModal(true);
   };
